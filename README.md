@@ -5,7 +5,7 @@
 
 > After the instances are launched, Now we can now setup our Cluster on them.
 
-##**Master Node Setup**
+### **Master Node Setup**
 * First we need to install ```docker```. If we are using ```Amazon Linux 2 AMI``` we can install docker using
 ```
 yum install docker
@@ -119,7 +119,7 @@ kubectl apply  -f https://raw.githubusercontent.com/coreos/flannel/master/Docume
 ```
 Now we can see that our master node gets ```Ready```.
 
-**Slave/Worker Node Setup**
+### **Slave/Worker Node Setup**
 
 > We have follow same steps to setup slaves/worker Nodes
 * Installing docker and enabling docker service
