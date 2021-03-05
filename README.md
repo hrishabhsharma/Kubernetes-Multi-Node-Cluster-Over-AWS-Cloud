@@ -31,7 +31,7 @@ EOF
 * Now we are ready to install ```kubeadm```, ```kubelet```, ```kubectl```.
 
 > Link for the Kubeadm Installation Guide: https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/
-> 
+
 * kubeadm: the command to bootstrap the cluster.
 * kubelet: the component that runs on all of the machines in your cluster and does things like starting pods and containers.
 * kubectl: the command line util to talk to your cluster.
@@ -48,14 +48,17 @@ systemctl enable --now kubelet
 ```
  kubeadm config images pull
  ```
- Kuberenets has to run differnt process behind the scene. So, to install these resources it uses containers and in the containers we will be having the required resources eg.
-     > kube-apiserver:v1.20.2
-     > kube-controller-manager:v1.20.2
-     > kube-scheduler:v1.20.2
-     > kube-proxy:v1.20.2
-     > pause:3.2
-     > etcd:3.4.13-0
-     > coredns:1.7.0
+ 
+ > Kuberenets has to run differnt process behind the scene. So, to install these resources it uses containers and in the containers we will be having the required resources eg.
+  ```   
+     ➢ kube-apiserver:v1.20.2
+     ➢ kube-controller-manager:v1.20.2
+     ➢ kube-scheduler:v1.20.2
+     ➢ kube-proxy:v1.20.2
+     ➢ pause:3.2
+     ➢ etcd:3.4.13-0
+     ➢ coredns:1.7.0
+  ```  
 
 * Now we need to change the driver in the docker. By default docker uses cgroupfs driver. So we need to change it to systemd driver.
 ```
@@ -86,12 +89,12 @@ echo "1" > /proc/sys/net/bridge/bridge-nf-call-iptables
 ```
 kubeadm init --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors=NumCPU --ignore-preflight-errors=Mem
 ```
-
-   > --pod-network-cidr=10.244.0.0/16: containers will be launched within this range of network.
-   > --ignore-preflight-errors=NumCPU: As we are using t2.micro i.e. 1GB RAM and 1 CPU so to ignore the errors of CPU we are using this.
-   > --ignore-preflight-errors=Mem: We have only 1GB RAM so to ignore errors on Mem we are using this.
+```
+   ➢ --pod-network-cidr=10.244.0.0/16: containers will be launched within this range of network.
+   ➢ --ignore-preflight-errors=NumCPU: As we are using t2.micro i.e. 1GB RAM and 1 CPU so to ignore the errors of CPU we are using this.
+   ➢ --ignore-preflight-errors=Mem: We have only 1GB RAM so to ignore errors on Mem we are using this.
   
-  
+```  
 
 * After initializing master it will give you commands to run. Below are the commands we need to run
 ```
