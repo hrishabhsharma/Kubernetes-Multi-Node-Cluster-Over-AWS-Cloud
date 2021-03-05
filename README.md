@@ -90,7 +90,7 @@ kubeadm init --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors=NumCPU -
    - --pod-network-cidr=10.244.0.0/16: containers will be launched within this range of network.
    - --ignore-preflight-errors=NumCPU: As we are using t2.micro i.e. 1GB RAM and 1 CPU so to ignore the errors of CPU we are using this.
    - --ignore-preflight-errors=Mem: We have only 1GB RAM so to ignore errors on Mem we are using this.
-   - 
+   
 
 * After initializing master it will give you commands to run. Below are the commands we need to run
 ```
