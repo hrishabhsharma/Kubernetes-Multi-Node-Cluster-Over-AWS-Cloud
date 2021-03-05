@@ -44,6 +44,8 @@ yum install -y kubelet kubeadm kubectl --disableexcludes=kubernetes
 ```
 systemctl enable --now kubelet
 ```
+> After this if we run ```systemctl status kubelet``` it will show ```Active: activating```. It will not get active.
+
 * Now we have to pull the images of different types of resources using kubeadm.
 ```
  kubeadm config images pull
@@ -73,7 +75,6 @@ vi daemon.json
 * After this we need to restart docker service
 ```
 systemctl restart docker
-
 ```
 > Now after restarting docker we check the driver ```docker info | grep Driver```. It will get updated to ```systemd```
 
@@ -93,8 +94,7 @@ kubeadm init --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors=NumCPU -
 ```
    ➢ --pod-network-cidr=10.244.0.0/16: containers will be launched within this range of network.
    ➢ --ignore-preflight-errors=NumCPU: As we are using t2.micro i.e. 1GB RAM and 1 CPU so to ignore the errors of CPU we are using this.
-   ➢ --ignore-preflight-errors=Mem: We have only 1GB RAM so to ignore errors on Mem we are using this.
-  
+   ➢ --ignore-preflight-errors=Mem: We have only 1GB RAM so to ignore errors on Mem we are using this.  
 ```  
 
 * After initializing master it will give you commands to run. Below are the commands we need to run
@@ -112,15 +112,14 @@ kubeadm init --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors=NumCPU -
     --discovery-token-ca-cert-hash sha256:e407939ade9c8e09b7e231bbde5479b2c0d1926c753ac8b2bb623cd4b8b61c61 
  ```
  
+> Here if we run ```systemctl status kubelet``` it will show ```Active: active (running)```. 
+ 
 * Now if you run ```kubectl get pods``` you will find that you don't have any resources in the default namespace. 
 ```
 kubectl get pods --all-namespaces
 ```
  > It will show coredns STATUS as ```Pending```
   
-```
-systemctl status kubelet
-```
 * To create Token for slave/worker nodes so that they can join to Master using
 ```
 kubeadm token create  --print-join-command
