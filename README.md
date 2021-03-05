@@ -63,13 +63,14 @@ systemctl enable --now kubelet
 * Now we need to change the driver in the docker. By default docker uses cgroupfs driver. So we need to change it to systemd driver.
 ```
 cd /etc/docker
-
+```
+```
 vi daemon.json
 {
   "exec-opts": ["native.cgroupdriver=systemd"]
 }
 ```
-* Restarting docker service
+* After this we need to restart docker service
 ```
 systemctl restart docker
 
@@ -87,7 +88,7 @@ echo "1" > /proc/sys/net/bridge/bridge-nf-call-iptables
 ```
 * Now we are all set to initialize the master with respective pod-network-cidr. We can initialize using
 ```
-kubeadm init --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors=NumCPU --ignore-preflight-errors=Mem
+kubeadm init --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors=NumCPU --ignore-preflight-errors=Mem --node-name=master
 ```
 ```
    ➢ --pod-network-cidr=10.244.0.0/16: containers will be launched within this range of network.
@@ -97,6 +98,7 @@ kubeadm init --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors=NumCPU -
 ```  
 
 * After initializing master it will give you commands to run. Below are the commands we need to run
+> To start using your cluster, you need to run the following as a regular user:
 ```
  mkdir -p $HOME/.kube
  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
@@ -104,11 +106,20 @@ kubeadm init --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors=NumCPU -
  ```
  > After running this it kubetnetes creates a .kube from the above first command and inside that we need to create a config file (configuration file) i.e from second command. Now to change the owner permission we are using chown so that it will change the owner permission of config file inside .kube.
  
+ > Then you can join any number of worker nodes by running the following on each as root:
+ ```
+   kubeadm join 172.31.42.136:6443 --token isit2b.s1m8j4dw8x2uy3f9 \
+    --discovery-token-ca-cert-hash sha256:e407939ade9c8e09b7e231bbde5479b2c0d1926c753ac8b2bb623cd4b8b61c61 
+ ```
+ 
 * Now if you run ```kubectl get pods``` you will find that you don't have any resources in the default namespace. 
 ```
 kubectl get pods --all-namespaces
-
-kubectl status kubelet
+```
+ > It will show coredns STATUS as ```Pending```
+  
+```
+systemctl status kubelet
 ```
 * To create Token for slave/worker nodes so that they can join to Master using
 ```
@@ -121,7 +132,7 @@ If we run ```kubectl get nodes``` we will see that master node will show status 
 ```
 kubectl apply  -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 ```
-Now we can see that our master node gets ```Ready```.
+Now we can see that our master node gets ```Ready``` and coredns STATUS as ```Running```
 #
 
 ### **Slave/Worker Node Setup**
@@ -183,7 +194,8 @@ EOF
 > Now we are ready with our slave node to join to master node. To Join we have to use the token generated from master and use ```kubeadm join``` command.
 * For Example token generated will look like
 ```
-kubeadm join 172.31.40.209:6443 --token 3joamn.y8asi8hw2jb41xx5 --discovery-token-ca-cert-hash sha256:86dd3714b1168b8de0abcb63300a458baf838860ff9c6f53bd85707853ff4db7
+kubeadm join 172.31.42.136:6443 --token isit2b.s1m8j4dw8x2uy3f9 \
+    --discovery-token-ca-cert-hash sha256:e407939ade9c8e09b7e231bbde5479b2c0d1926c753ac8b2bb623cd4b8b61c61  
 ```
 
 > Now go to master and then run ```kubectl get nodes``` you will find that slave is now connected to master.
