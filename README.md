@@ -164,7 +164,8 @@ exclude=kubelet kubeadm kubectl
 * Now we need to change the driver in the docker. By default docker uses cgroupfs driver. So we need to change it to systemd driver.
 ```
 cd /etc/docker
-
+```
+```
 vi daemon.json
 {
   "exec-opts": ["native.cgroupdriver=systemd"]
@@ -173,7 +174,6 @@ vi daemon.json
 * Restarting docker service
 ```
 systemctl restart docker
-
 ```
 * Now after restarting docker we check the driver ```docker info | grep Driver```. It will get updated to ```systemd```
 
@@ -188,17 +188,16 @@ cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
 net.bridge.bridge-nf-call-ip6tables = 1
 net.bridge.bridge-nf-call-iptables = 1
 EOF
-
 ```
 > Now we are ready with our slave node to join to master node. To Join we have to use the token generated from master and use ```kubeadm join``` command.
 * For Example token generated will look like
 ```
 kubeadm join 172.31.42.136:6443 --token isit2b.s1m8j4dw8x2uy3f9 \
-    --discovery-token-ca-cert-hash sha256:e407939ade9c8e09b7e231bbde5479b2c0d1926c753ac8b2bb623cd4b8b61c61  
+    --discovery-token-ca-cert-hash sha256:e407939ade9c8e09b7e231bbde5479b2c0d1926c753ac8b2bb623cd4b8b61c61  --node-name=node1
 ```
 
 > Now go to master and then run ```kubectl get nodes``` you will find that slave is now connected to master.
 #
 
-* We can now launch as many slave nodes in same way and connect it to the Cluster.
+ **Now we can join any number of worker nodes in same way and connect it to the Cluster**
 
