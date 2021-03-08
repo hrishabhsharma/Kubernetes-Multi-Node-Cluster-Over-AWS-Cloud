@@ -1,5 +1,7 @@
 # Kubernetes-Multi-Node-Cluster-Over-AWS-Cloud
 #
+
+![Alt Text](https://github.com/hrishabhsharma/Kubernetes-Multi-Node-Cluster-Over-AWS-Cloud/blob/main/k8s-multi-node-cluster.gif)
 * Here we will see how to create ```Kubernetes-Multi-Node-Cluster-Over-AWS-Cloud```. First we have to launch ec2 instances on AWS Cloud one as ```Master``` others as```Slaves```.
 * We can use ```t2.micro``` Instance Type which comes under free-tier. 
 
